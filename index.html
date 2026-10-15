@@ -1,0 +1,457 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Болзооны урилга</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,600;1,600&family=Manrope:wght@400;600;700&display=swap">
+<style>
+/* Layout: нэг баганатай урилга. 1-р алхам нь томоохон асуулт + Тийм/Үгүй, дараагийн алхмууд нь сонголтын хуудсууд, төгсгөлд тасалбар. */
+:root {
+  --bg: #FBF1F4;
+  --surface: #FFFFFF;
+  --fg: #2A1424;
+  --muted: #7A5E70;
+  --accent: #C21F5B;
+  --accent-fg: #FFFFFF;
+  --soft: #F7D9E3;
+  --line: #EBCFDB;
+  --glow: rgba(194, 31, 91, 0.10);
+  --font-display: "Lora", Georgia, "Times New Roman", serif;
+  --font-body: "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1B0E19; --surface: #291629; --fg: #F8E9F0; --muted: #C4A3B8;
+    --accent: #FF6B9C; --accent-fg: #2A0C1B; --soft: #3B1F36; --line: #4A2B45;
+    --glow: rgba(255, 107, 156, 0.12);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1B0E19; --surface: #291629; --fg: #F8E9F0; --muted: #C4A3B8;
+  --accent: #FF6B9C; --accent-fg: #2A0C1B; --soft: #3B1F36; --line: #4A2B45;
+  --glow: rgba(255, 107, 156, 0.12);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  background-image: radial-gradient(60rem 30rem at 85% -10%, var(--glow), transparent 70%),
+                    radial-gradient(40rem 26rem at -10% 110%, var(--glow), transparent 70%);
+  background-attachment: fixed;
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  padding-block: 20px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  overflow-x: hidden;
+}
+.app { max-width: 560px; margin: 0 auto; position: relative; }
+h1, h2 { font-family: var(--font-display); font-style: italic; font-weight: 600; text-wrap: balance; margin: 0; outline: none; }
+h1 { font-size: clamp(2.4rem, 9vw, 3.4rem); line-height: 1.1; }
+h2 { font-size: clamp(1.8rem, 6.5vw, 2.3rem); line-height: 1.15; }
+p { margin: 0; }
+.eyebrow { font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; color: var(--accent); }
+.lead { color: var(--muted); max-width: 46ch; }
+
+/* progress */
+.progress { display: flex; gap: 6px; margin-bottom: 28px; }
+.progress span { flex: 1; height: 5px; border-radius: 99px; background: var(--line); transition: background .3s; }
+.progress span.on { background: var(--accent); }
+.progress-label { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--muted); margin-bottom: 8px; }
+
+.step { display: flex; flex-direction: column; gap: 22px; animation: rise .45s ease both; }
+@keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+/* step 1 */
+.hero { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px; padding-top: 18px; position: relative; }
+.big-heart { width: 112px; height: 112px; color: var(--accent); animation: beat 1.6s ease-in-out infinite; transform-origin: center; filter: drop-shadow(0 10px 18px var(--glow)); }
+@keyframes beat { 0%, 100% { transform: scale(1); } 14% { transform: scale(1.1); } 28% { transform: scale(1); } 42% { transform: scale(1.07); } 56% { transform: scale(1); } }
+.float { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.float svg { position: absolute; bottom: -20px; width: 16px; height: 16px; color: var(--accent); opacity: 0; animation: up 9s linear infinite; }
+@keyframes up { 0% { transform: translateY(0) scale(.8); opacity: 0; } 12% { opacity: .35; } 100% { transform: translateY(-420px) scale(1.2); opacity: 0; } }
+
+.choice { position: relative; height: 230px; margin-top: 8px; }
+.choice .yes { position: absolute; left: 50%; top: 20px; transform: translateX(-50%) scale(var(--s, 1)); transform-origin: center top; transition: transform .35s cubic-bezier(.3,1.6,.5,1); }
+.choice .no { position: absolute; left: 50%; top: 150px; transform: translateX(-50%); transition: left .22s ease, top .22s ease; white-space: nowrap; }
+.hint { min-height: 1.5em; color: var(--muted); font-size: 0.9rem; text-align: center; }
+
+/* buttons */
+.btn { font: inherit; font-weight: 700; border-radius: 999px; padding: 14px 30px; border: 2px solid transparent; cursor: pointer; transition: transform .15s, background .2s, opacity .2s; min-height: 50px; }
+.btn:focus-visible, .chip input:focus-visible + span, .opt input:focus-visible + .opt-body, textarea:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.btn-primary { background: var(--accent); color: var(--accent-fg); }
+.btn-primary:hover:not(:disabled) { transform: translateY(-1px); }
+.btn-primary:disabled { opacity: .35; cursor: not-allowed; }
+.btn-ghost { background: transparent; color: var(--fg); border-color: var(--line); }
+.btn-ghost:hover { border-color: var(--accent); }
+.nav { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 4px; }
+.nav .btn-primary { flex: 1 1 180px; }
+
+/* chips */
+.group-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 10px; }
+.days { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.times { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 8px; }
+.chip { position: relative; display: block; min-width: 0; }
+.chip input, .opt input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.chip span { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 10px 6px; border: 1.5px solid var(--line); background: var(--surface); border-radius: 14px; cursor: pointer; transition: border-color .2s, background .2s, color .2s; min-height: 64px; text-align: center; }
+.chip span small { font-size: 0.72rem; color: var(--muted); letter-spacing: .04em; text-transform: uppercase; }
+.chip span b { font-size: 1.35rem; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.chip.time span b { font-size: 1.05rem; }
+.chip:hover span { border-color: var(--accent); }
+.chip input:checked + span { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
+.chip input:checked + span small { color: var(--accent-fg); opacity: .85; }
+
+.options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.opt { position: relative; display: block; min-width: 0; }
+.opt-body { display: flex; flex-direction: column; gap: 4px; height: 100%; padding: 14px; border: 1.5px solid var(--line); background: var(--surface); border-radius: 16px; cursor: pointer; transition: border-color .2s, background .2s; }
+.opt-body b { font-size: 1rem; line-height: 1.25; }
+.opt-body small { color: var(--muted); font-size: 0.82rem; line-height: 1.35; }
+.opt:hover .opt-body { border-color: var(--accent); }
+.opt input:checked + .opt-body { border-color: var(--accent); background: var(--soft); box-shadow: inset 0 0 0 1px var(--accent); }
+.opt input:checked + .opt-body b::after { content: " \2713"; color: var(--accent); }
+@media (max-width: 380px) { .options { grid-template-columns: 1fr; } }
+
+textarea { font: inherit; width: 100%; min-height: 84px; resize: vertical; padding: 12px 14px; border-radius: 14px; border: 1.5px solid var(--line); background: var(--surface); color: var(--fg); }
+label.field { display: flex; flex-direction: column; gap: 8px; font-weight: 700; font-size: 0.95rem; }
+label.field small { font-weight: 400; color: var(--muted); }
+
+/* ticket */
+.ticket { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; overflow: visible; box-shadow: 0 18px 40px -22px var(--accent); }
+.ticket-top { padding: 22px 22px 20px; display: flex; flex-direction: column; gap: 6px; }
+.ticket-top .when { font-family: var(--font-display); font-style: italic; font-weight: 600; font-size: 1.7rem; line-height: 1.2; text-wrap: balance; }
+.ticket-top .at { font-size: 2.6rem; font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; line-height: 1; }
+.perf { position: relative; border-top: 2px dashed var(--line); }
+.perf::before, .perf::after { content: ""; position: absolute; top: -12px; width: 22px; height: 22px; border-radius: 50%; background: var(--bg); }
+.perf::before { left: -12px; }
+.perf::after { right: -12px; }
+.ticket-bottom { padding: 18px 22px 22px; display: grid; gap: 14px; }
+.row { display: grid; grid-template-columns: 82px minmax(0, 1fr); gap: 10px; align-items: baseline; }
+.row dt { font-size: 0.75rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+.row dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; }
+dl { margin: 0; display: grid; gap: 14px; }
+.msgbox { display: flex; flex-direction: column; gap: 10px; }
+.status { min-height: 1.4em; font-size: 0.9rem; color: var(--accent); font-weight: 600; }
+
+@media (prefers-reduced-motion: reduce) {
+  .big-heart, .float svg, .step { animation: none; }
+  .float svg { opacity: .2; }
+  * { transition: none !important; }
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="h" viewBox="0 0 24 24"><path fill="currentColor" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></symbol>
+</svg>
+
+<main class="app">
+
+  <!-- 1. Урилга -->
+  <section class="step" data-step="1">
+    <div class="hero">
+      <div class="float" aria-hidden="true">
+        <svg style="left:8%;animation-delay:0s"><use href="#h"/></svg>
+        <svg style="left:24%;animation-delay:2.4s;animation-duration:11s"><use href="#h"/></svg>
+        <svg style="left:42%;animation-delay:5s"><use href="#h"/></svg>
+        <svg style="left:62%;animation-delay:1.2s;animation-duration:10s"><use href="#h"/></svg>
+        <svg style="left:78%;animation-delay:3.6s"><use href="#h"/></svg>
+        <svg style="left:91%;animation-delay:6.5s;animation-duration:12s"><use href="#h"/></svg>
+      </div>
+      <svg class="big-heart" aria-hidden="true"><use href="#h"/></svg>
+      <p class="eyebrow">Танд зориулсан урилга</p>
+      <h1 tabindex="-1">Надтай болзох уу?</h1>
+      <p class="lead">Нэг сайхан орой, амттай хоол, тайван яриа. Бусдыг нь хамтдаа сонгоно.</p>
+    </div>
+    <div class="choice" id="choice">
+      <button class="btn btn-primary yes" id="yes" type="button">Тийм</button>
+      <button class="btn btn-ghost no" id="no" type="button">Үгүй</button>
+    </div>
+    <p class="hint" id="hint" aria-live="polite"></p>
+  </section>
+
+  <!-- 2. Өдөр, цаг -->
+  <section class="step" data-step="2" hidden>
+    <div class="top"></div>
+    <div>
+      <p class="eyebrow">Хэзээ уулзах вэ</p>
+      <h2 tabindex="-1">Өдөр, цагаа сонгоорой</h2>
+    </div>
+    <div>
+      <p class="group-title">Өдөр</p>
+      <div class="days" id="days" role="radiogroup" aria-label="Өдөр"></div>
+    </div>
+    <div>
+      <p class="group-title">Цаг</p>
+      <div class="times" id="times" role="radiogroup" aria-label="Цаг"></div>
+    </div>
+    <div class="nav">
+      <button class="btn btn-ghost" data-back type="button">Буцах</button>
+      <button class="btn btn-primary" data-next id="next2" type="button" disabled>Үргэлжлүүлэх</button>
+    </div>
+  </section>
+
+  <!-- 3. Хоол -->
+  <section class="step" data-step="3" hidden>
+    <div class="top"></div>
+    <div>
+      <p class="eyebrow">Юу идэх вэ</p>
+      <h2 tabindex="-1">Хамгийн дуртай хоолоо сонго</h2>
+    </div>
+    <div class="options" id="foods" role="radiogroup" aria-label="Хоол"></div>
+    <div class="nav">
+      <button class="btn btn-ghost" data-back type="button">Буцах</button>
+      <button class="btn btn-primary" data-next id="next3" type="button" disabled>Үргэлжлүүлэх</button>
+    </div>
+  </section>
+
+  <!-- 4. Ундаа -->
+  <section class="step" data-step="4" hidden>
+    <div class="top"></div>
+    <div>
+      <p class="eyebrow">Юу уух вэ</p>
+      <h2 tabindex="-1">Ундаагаа сонгоорой</h2>
+    </div>
+    <div class="options" id="drinks" role="radiogroup" aria-label="Ундаа"></div>
+    <label class="field" for="note">Нэмж хэлэх зүйл <small>Заавал биш. Хүссэн газар, хүсэлт, юуны харшил гэх мэт.</small>
+      <textarea id="note" maxlength="240" placeholder="Жишээ нь: Намуухан газар байвал сайхан байна."></textarea>
+    </label>
+    <div class="nav">
+      <button class="btn btn-ghost" data-back type="button">Буцах</button>
+      <button class="btn btn-primary" data-next id="next4" type="button" disabled>Болзоогоо бэлэн болгох</button>
+    </div>
+  </section>
+
+  <!-- 5. Тасалбар -->
+  <section class="step" data-step="5" hidden>
+    <div class="top"></div>
+    <div>
+      <p class="eyebrow">Тохирлоо</p>
+      <h2 tabindex="-1">Болзоо бэлэн боллоо</h2>
+    </div>
+    <div class="ticket">
+      <div class="ticket-top">
+        <p class="eyebrow">Болзооны тасалбар</p>
+        <p class="when" id="t-when"></p>
+        <p class="at" id="t-at"></p>
+      </div>
+      <div class="perf"></div>
+      <div class="ticket-bottom">
+        <dl>
+          <div class="row"><dt>Хоол</dt><dd id="t-food"></dd></div>
+          <div class="row"><dt>Ундаа</dt><dd id="t-drink"></dd></div>
+          <div class="row" id="t-note-row"><dt>Тэмдэглэл</dt><dd id="t-note"></dd></div>
+        </dl>
+      </div>
+    </div>
+    <div class="msgbox">
+      <label class="field" for="msg">Илгээх мессеж <small>Энэ хуудас мессеж илгээхгүй. Хуулж аваад өөрөө илгээгээрэй.</small>
+        <textarea id="msg" readonly></textarea>
+      </label>
+      <p class="status" id="status" aria-live="polite"></p>
+    </div>
+    <div class="nav">
+      <button class="btn btn-ghost" id="restart" type="button">Дахин сонгох</button>
+      <button class="btn btn-primary" id="copy" type="button">Мессеж хуулах</button>
+    </div>
+  </section>
+
+</main>
+
+<script>
+(function () {
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var steps = Array.prototype.slice.call(document.querySelectorAll('.step'));
+  var state = { day: null, time: null, food: null, drink: null };
+  var TOTAL_PROGRESS = 4; // 2..5
+
+  var DAY_SHORT = ['Ням', 'Дав', 'Мяг', 'Лха', 'Пүр', 'Баа', 'Бям'];
+  var DAY_FULL = ['Ням гараг', 'Даваа гараг', 'Мягмар гараг', 'Лхагва гараг', 'Пүрэв гараг', 'Баасан гараг', 'Бямба гараг'];
+  var TIMES = ['12:00', '14:00', '16:00', '18:00', '19:30', '21:00'];
+  var FOODS = [
+    ['Бууз, хуушуур', 'Монгол гэрийн амт'],
+    ['Хотпот, шабу-шабу', 'Хамтдаа чанаж идэнэ'],
+    ['Солонгос шарсан мах', 'Ширээн дээрээ шарна'],
+    ['Далайн хоол', 'Сам хорхой, хавч, загас'],
+    ['Суши, ролл', 'Хөнгөн, шинэхэн'],
+    ['Шөл, салат', 'Хөнгөн, эрүүл'],
+    ['Паста, пицца', 'Италийн оройн хоол'],
+    ['Стейк', 'Тайван ресторанд'],
+    ['Бялуу, амттан', 'Зөвхөн чихэрлэг зүйл'],
+    ['Чи сонгоорой', 'Би гайхширахыг хүсэж байна']
+  ];
+  var DRINKS = [
+    ['Сүүтэй цай', 'Дулаахан, танил амт'],
+    ['Латте, капучино', 'Кофены газрын сонгодог'],
+    ['Ногоон цай', 'Намуухан сонголт'],
+    ['Шинэ шүүс', 'Цэнгэг, хөнгөн'],
+    ['Халуун шоколад', 'Чихэрлэг, зөөлөн'],
+    ['Дарс', 'Оройн уулзалтад'],
+    ['Коктейль', 'Хөгжилтэй орой'],
+    ['Чи сонгоорой', 'Би итгэж байна']
+  ];
+
+  function go(n) {
+    steps.forEach(function (s) { s.hidden = Number(s.getAttribute('data-step')) !== n; });
+    var cur = steps[n - 1];
+    window.scrollTo(0, 0);
+    var h = cur.querySelector('h1, h2');
+    if (h) { try { h.focus({ preventScroll: true }); } catch (e) {} }
+    if (n >= 2) renderProgress(cur, n);
+    if (n === 5) buildTicket();
+  }
+
+  function renderProgress(cur, n) {
+    var top = cur.querySelector('.top');
+    if (!top) return;
+    var idx = n - 1; // 1..4
+    var labels = ['', 'Цаг', 'Хоол', 'Ундаа', 'Бэлэн'];
+    var bars = '';
+    for (var i = 1; i <= TOTAL_PROGRESS; i++) bars += '<span class="' + (i <= idx ? 'on' : '') + '"></span>';
+    top.innerHTML = '<div class="progress-label"><span>Алхам ' + idx + ' / ' + TOTAL_PROGRESS + '</span><span>' + labels[n - 1] + '</span></div><div class="progress" role="presentation">' + bars + '</div>';
+  }
+
+  /* ---------- Алхам 1: Тийм / Үгүй ---------- */
+  var yes = $('#yes'), no = $('#no'), area = $('#choice'), hint = $('#hint');
+  var attempts = 0, surrendered = false;
+  var noLabels = ['Үгүй', 'Үнэхээр үү?', 'Дахин бодооч', 'Нэг боломж өгөөч', 'Гуйя, гуйя', 'Битгий ингэе дээ'];
+  var hints = [
+    '', 'Үгүй гэх товч зугтаад байна.', 'Тийм товч томорч байгааг анзаарав уу?',
+    'Би хүлээж байна.', 'Барьж үз, чадахгүй байх.', 'Сүүлчийн боломж.'
+  ];
+
+  function overlap(a, b, pad) {
+    return !(a.right + pad < b.left || a.left - pad > b.right || a.bottom + pad < b.top || a.top - pad > b.bottom);
+  }
+
+  function dodge() {
+    attempts++;
+    if (attempts >= 6) { surrender(); return; }
+    no.textContent = noLabels[attempts];
+    hint.textContent = hints[attempts] || '';
+    yes.style.setProperty('--s', Math.min(1 + attempts * 0.09, 1.5));
+    var ar = area.getBoundingClientRect();
+    var yr = yes.getBoundingClientRect();
+    var nw = no.offsetWidth, nh = no.offsetHeight;
+    var x = 0, y = 0, ok = false;
+    for (var i = 0; i < 50 && !ok; i++) {
+      x = Math.random() * Math.max(0, ar.width - nw);
+      y = Math.random() * Math.max(0, ar.height - nh);
+      var rect = { left: ar.left + x, top: ar.top + y, right: ar.left + x + nw, bottom: ar.top + y + nh };
+      ok = !overlap(rect, yr, 14);
+    }
+    if (!ok) { x = Math.max(0, ar.width - nw); y = Math.max(0, ar.height - nh); }
+    no.style.transform = 'none';
+    no.style.left = x + 'px';
+    no.style.top = y + 'px';
+  }
+
+  function surrender() {
+    surrendered = true;
+    no.textContent = 'За, тийм гээд өгье';
+    no.classList.remove('btn-ghost');
+    no.classList.add('btn-primary');
+    no.style.left = '50%';
+    no.style.top = '150px';
+    no.style.transform = 'translateX(-50%)';
+    yes.style.setProperty('--s', 1.25);
+    hint.textContent = 'Мэдэж байсан. Явъя.';
+  }
+
+  no.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse' && !surrendered) dodge(); });
+  no.addEventListener('click', function () { if (surrendered) go(2); else dodge(); });
+  yes.addEventListener('click', function () { go(2); });
+
+  /* ---------- Алхам 2: өдөр, цаг ---------- */
+  function pad(n) { return n < 10 ? '0' + n : '' + n; }
+  var daysEl = $('#days'), timesEl = $('#times');
+  var dayList = [];
+  for (var i = 23; i <= 30; i++) {
+    var d = new Date(2026, 9, i); // 2026 оны 10-р сарын 23-30
+    var top = DAY_SHORT[d.getDay()];
+    dayList.push({ date: d, top: top, num: d.getDate(), month: (d.getMonth() + 1) + '-р сар',
+      full: DAY_FULL[d.getDay()] + ', ' + (d.getMonth() + 1) + '-р сарын ' + d.getDate() });
+  }
+  daysEl.innerHTML = dayList.map(function (d, k) {
+    return '<label class="chip"><input type="radio" name="day" value="' + k + '"><span><small>' + d.top + '</small><b>' + d.num + '</b><small>' + d.month + '</small></span></label>';
+  }).join('');
+  timesEl.innerHTML = TIMES.map(function (t) {
+    return '<label class="chip time"><input type="radio" name="time" value="' + t + '"><span><b>' + t + '</b></span></label>';
+  }).join('');
+
+  daysEl.addEventListener('change', function (e) { state.day = dayList[Number(e.target.value)]; check(); });
+  timesEl.addEventListener('change', function (e) { state.time = e.target.value; check(); });
+
+  /* ---------- Алхам 3, 4: хоол, ундаа ---------- */
+  function renderOpts(el, list, name) {
+    el.innerHTML = list.map(function (o, k) {
+      return '<label class="opt"><input type="radio" name="' + name + '" value="' + k + '"><span class="opt-body"><b>' + o[0] + '</b><small>' + o[1] + '</small></span></label>';
+    }).join('');
+  }
+  renderOpts($('#foods'), FOODS, 'food');
+  renderOpts($('#drinks'), DRINKS, 'drink');
+  $('#foods').addEventListener('change', function (e) { state.food = FOODS[Number(e.target.value)][0]; check(); });
+  $('#drinks').addEventListener('change', function (e) { state.drink = DRINKS[Number(e.target.value)][0]; check(); });
+
+  function check() {
+    $('#next2').disabled = !(state.day && state.time);
+    $('#next3').disabled = !state.food;
+    $('#next4').disabled = !state.drink;
+  }
+
+  /* ---------- навигац ---------- */
+  steps.forEach(function (s) {
+    var n = Number(s.getAttribute('data-step'));
+    var b = s.querySelector('[data-back]'), nx = s.querySelector('[data-next]');
+    if (b) b.addEventListener('click', function () { go(n - 1); });
+    if (nx) nx.addEventListener('click', function () { go(n + 1); });
+  });
+
+  /* ---------- Алхам 5: тасалбар ---------- */
+  var msgEl = $('#msg'), statusEl = $('#status');
+  function buildTicket() {
+    var note = $('#note').value.trim();
+    $('#t-when').textContent = state.day.full;
+    $('#t-at').textContent = state.time;
+    $('#t-food').textContent = state.food;
+    $('#t-drink').textContent = state.drink;
+    $('#t-note').textContent = note;
+    $('#t-note-row').hidden = !note;
+    var lines = [
+      'Би болзоонд тийм гэлээ!',
+      'Өдөр: ' + state.day.full,
+      'Цаг: ' + state.time,
+      'Хоол: ' + state.food,
+      'Ундаа: ' + state.drink
+    ];
+    if (note) lines.push('Нэмэлт: ' + note);
+    lines.push('Уулзацгаая.');
+    msgEl.value = lines.join('\n');
+    statusEl.textContent = '';
+  }
+
+  $('#copy').addEventListener('click', function () {
+    function ok() { statusEl.textContent = 'Хууллаа. Одоо мессежээр илгээгээрэй.'; }
+    function fallback() {
+      msgEl.focus(); msgEl.select();
+      var done = false;
+      try { done = document.execCommand('copy'); } catch (e) {}
+      statusEl.textContent = done ? 'Хууллаа. Одоо мессежээр илгээгээрэй.' : 'Мессежийг сонгосон. Гараараа хуулна уу.';
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(msgEl.value).then(ok, fallback);
+    } else fallback();
+  });
+
+  $('#restart').addEventListener('click', function () {
+    state = { day: null, time: null, food: null, drink: null };
+    document.querySelectorAll('input[type=radio]').forEach(function (r) { r.checked = false; });
+    $('#note').value = '';
+    check();
+    go(2);
+  });
+
+  check();
+})();
+</script>
+
+</body></html>
